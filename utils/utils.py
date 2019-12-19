@@ -8,6 +8,7 @@
 import re
 import importlib
 from matplotlib import pyplot as plt
+from copy import deepcopy
 import os
 import sys
 import types
@@ -94,6 +95,15 @@ def call_func_by_name(*args, func_name: str = None, **kwargs) -> Any:
     func_obj = get_obj_by_name(func_name)
     assert callable(func_obj)
     return func_obj(*args, **kwargs)
+
+def load_params(model, new_param):
+    for p, new_p in zip(model.parameters(), new_param):
+        p.data.copy_(new_p)
+
+
+def copy_G_params(model):
+    flatten = deepcopy(list(p.data for p in model.parameters()))
+    return flatten
 
 
 if __name__ == "__main__":
